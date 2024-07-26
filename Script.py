@@ -1,9 +1,9 @@
 class script(object):  
     START_TXT = """<b>✨ Hᴇʟʟᴏ {user}.
 
-I Cᴀɴ Pʀᴏᴠɪᴅᴇ HD Mᴏᴠɪᴇ Fᴏʀ Yᴏᴜ
+Just Send Name In ENGLISH
 
-admin @MM_Admin_Bot</b>"""
+Admin @MM_Admin_Bot</b>"""
     
     HELP_TXT = "Hᴇʏ {}\nHᴇʀᴇ Mꜱ Mʏ Hᴇʟᴩ"
 
