@@ -11,6 +11,9 @@ from bs4 import BeautifulSoup
 import pytz, random, string
 from shortzy import Shortzy
 
+TOKENS = {}
+VERIFIED = {}
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -19,8 +22,6 @@ BANNED = {}
 SMART_OPEN = '“'
 SMART_CLOSE = '”'
 START_CHAR = ('\'', '"', SMART_OPEN)
-TOKENS = {}
-VERIFIED = {}
 
 # temp db for banned 
 class temp(object):
