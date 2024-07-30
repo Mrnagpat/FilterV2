@@ -74,7 +74,28 @@ async def start(client, message):
         await message.reply_photo(photo=random.choice(PICS), caption=START_MESSAGE.format(user=message.from_user.mention, bot=client.mention), reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML)
         return await m.delete()
 
-        
+        data = message.command[1]
+    if data.split("-", 1)[0] == "verify": # set if or elif it depend on your code
+        userid = data.split("-", 2)[1]
+        token = data.split("-", 3)[2]
+        if str(message.from_user.id) != str(userid):
+            return await message.reply_text(
+                text="<b>Invalid link or Expired link !</b>",
+                protect_content=True
+            )
+        is_valid = await check_token(client, userid, token)
+        if is_valid == True:
+            await message.reply_text(
+                text=f"<b>Hey {message.from_user.mention}, You are successfully verified !\nNow you have unlimited access for all files till today midnight.</b>",
+                protect_content=True
+            )
+            await verify_user(client, userid, token)
+        else:
+            return await message.reply_text(
+                text="<b>Invalid link or Expired link !</b>",
+                protect_content=True
+            )
+   
     data = message.command[1]
     try:
         pre, file_id = data.split('_', 1)
@@ -82,7 +103,19 @@ async def start(client, message):
         file_id = data
         pre = ""
         
-    if data.split("-", 1)[0] == "BATCH":
+    elif data.split("-", 1)[0] == "BATCH":
+        if not await check_verification(client, message.from_user.id) and VERIFY_MODE == True:
+            btn = [[
+                InlineKeyboardButton("Verify", url=await get_token(client, message.from_user.id, f"https://telegram.me/{username}?start="))
+            ],[
+                InlineKeyboardButton("How To Open Link & Verify", url=VERIFY_TUTORIAL)
+            ]]
+            await message.reply_text(
+                text="<b>You are not verified !\nKindly verify to continue !</b>",
+                protect_content=True,
+                reply_markup=InlineKeyboardMarkup(btn)
+            )
+            return
         sts = await message.reply("PLEASE WAIT......")
         file_id = data.split("-", 1)[1]
         msgs = BATCH_FILES.get(file_id)
@@ -164,27 +197,6 @@ async def start(client, message):
             await asyncio.sleep(1) 
         return await sts.delete()
 
-    if data.split("-", 1)[0] == "verify": # set if or elif it depend on your code
-        userid = data.split("-", 2)[1]
-        token = data.split("-", 3)[2]
-        if str(message.from_user.id) != str(userid):
-            return await message.reply_text(
-                text="<b>Invalid link or Expired link !</b>",
-                protect_content=True
-            )
-        is_valid = await check_token(client, userid, token)
-        if is_valid == True:
-            await message.reply_text(
-                text=f"<b>Hey {message.from_user.mention}, You are successfully verified !\nNow you have unlimited access for all files till today midnight.</b>",
-                protect_content=True
-            )
-            await verify_user(client, userid, token)
-        else:
-            return await message.reply_text(
-                text="<b>Invalid link or Expired link !</b>",
-                protect_content=True
-            )
-
     files_ = await get_file_details(file_id)           
     if not files_:
         pre, file_id = ((base64.urlsafe_b64decode(data + "=" * (-len(data) % 4))).decode("ascii")).split("_", 1)
@@ -225,6 +237,18 @@ async def start(client, message):
             logger.exception(e)
             f_caption=f_caption
     if f_caption is None:
+    if not await check_verification(client, message.from_user.id) and VERIFY == True:
+            btn = [[
+                InlineKeyboardButton("Verify", url=await get_token(client, message.from_user.id, f"https://telegram.me/{BOT_USERNAME}?start="))
+            ],[
+                InlineKeyboardButton("How To Open Link & Verify", url=VERIFY_TUTORIAL)
+            ]]
+            await message.reply_text(
+                text="<b>You are not verified !\nKindly verify to continue !</b>",
+                protect_content=True,
+                reply_markup=InlineKeyboardMarkup(btn)
+            )
+            return
         f_caption = f"{files.file_name}"
     await client.send_cached_media(chat_id=message.from_user.id, file_id=file_id, caption=f_caption, protect_content=True if pre == 'filep' else False,)
                     
