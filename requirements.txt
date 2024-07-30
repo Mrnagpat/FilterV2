@@ -34,6 +34,6 @@ wheel
 ujson
 wget
 pytz
-
+shortzy
 
 
