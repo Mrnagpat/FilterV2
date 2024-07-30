@@ -55,6 +55,14 @@ RemoveBG_API = environ.get("RemoveBG_API", "")
 SHORT_URL = environ.get("SHORT_URL")
 SHORT_API = environ.get("SHORT_API")
 
+from os import environ
+
+API = environ.get("API", "9281ebae144ab8120585b621165663de411d94e1") # shortlink api
+URL = environ.get("URL", "kok-links.com") # shortlink domain without https://
+VERIFY_TUTORIAL = environ.get("VERIFY_TUTORIAL", "https://t.me/How_To_Open_KOKLink") # how to open link 
+BOT_USERNAME = environ.get("BOT_USERNAME", "File_Magaa_RoBot") # bot username without @
+VERIFY = environ.get("VERIFY", "True") # set True Or False and make sure spelling is correct and first letter capital.
+
 # Others
 IMDB_DELET_TIME = int(environ.get('IMDB_DELET_TIME', "300"))
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', 0))
