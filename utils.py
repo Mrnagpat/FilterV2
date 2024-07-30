@@ -2,12 +2,14 @@ import logging, os, re, asyncio, requests, aiohttp
 from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait, UserIsBlocked, PeerIdInvalid                             
 from pyrogram.types import Message, InlineKeyboardButton
 from pyrogram import filters, enums
-from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM, SHORT_URL, SHORT_API
+from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM, SHORT_URL, SHORT_API, API, URL
 from imdb import Cinemagoer
 from typing import Union, List
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from database.users_chats_db import db
 from bs4 import BeautifulSoup
+import pytz, random, string
+from shortzy import Shortzy
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -17,6 +19,8 @@ BANNED = {}
 SMART_OPEN = '“'
 SMART_CLOSE = '”'
 START_CHAR = ('\'', '"', SMART_OPEN)
+TOKENS = {}
+VERIFIED = {}
 
 # temp db for banned 
 class temp(object):
@@ -318,6 +322,54 @@ async def get_shortlink(link):
     except Exception as e:
         logger.error(e)
         return link
+
+async def get_verify_shorted_link(link):
+    shortzy = Shortzy(api_key=API, base_site=URL)
+    link = await shortzy.convert(link)
+    return link
+
+async def check_token(bot, userid, token):
+    user = await bot.get_users(userid)
+    if user.id in TOKENS.keys():
+        TKN = TOKENS[user.id]
+        if token in TKN.keys():
+            is_used = TKN[token]
+            if is_used == True:
+                return False
+            else:
+                return True
+    else:
+        return False
+
+async def get_token(bot, userid, link):
+    user = await bot.get_users(userid)
+    token = ''.join(random.choices(string.ascii_letters + string.digits, k=7))
+    TOKENS[user.id] = {token: False}
+    link = f"{link}verify-{user.id}-{token}"
+    shortened_verify_url = await get_verify_shorted_link(link)
+    return str(shortened_verify_url)
+
+async def verify_user(bot, userid, token):
+    user = await bot.get_users(userid)
+    TOKENS[user.id] = {token: True}
+    tz = pytz.timezone('Asia/Kolkata')
+    today = date.today()
+    VERIFIED[user.id] = str(today)
+
+async def check_verification(bot, userid):
+    user = await bot.get_users(userid)
+    tz = pytz.timezone('Asia/Kolkata')
+    today = date.today()
+    if user.id in VERIFIED.keys():
+        EXP = VERIFIED[user.id]
+        years, month, day = EXP.split('-')
+        comp = date(int(years), int(month), int(day))
+        if comp<today:
+            return False
+        else:
+            return True
+    else:
+        return False
 
 
 # from Midukki-RoBoT
