@@ -103,19 +103,7 @@ async def start(client, message):
         file_id = data
         pre = ""
         
-    elif data.split("-", 1)[0] == "BATCH":
-        if not await check_verification(client, message.from_user.id) and VERIFY_MODE == True:
-            btn = [[
-                InlineKeyboardButton("Verify", url=await get_token(client, message.from_user.id, f"https://telegram.me/{username}?start="))
-            ],[
-                InlineKeyboardButton("How To Open Link & Verify", url=VERIFY_TUTORIAL)
-            ]]
-            await message.reply_text(
-                text="<b>You are not verified !\nKindly verify to continue !</b>",
-                protect_content=True,
-                reply_markup=InlineKeyboardMarkup(btn)
-            )
-            return
+    if data.split("-", 1)[0] == "BATCH":
         sts = await message.reply("PLEASE WAIT......")
         file_id = data.split("-", 1)[1]
         msgs = BATCH_FILES.get(file_id)
