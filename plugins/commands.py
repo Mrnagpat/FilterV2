@@ -164,6 +164,7 @@ async def start(client, message):
             await asyncio.sleep(1) 
         return await sts.delete()
 
+    data = message.command[1]
     if data.split("-", 1)[0] == "verify": # set if or elif it depend on your code
         userid = data.split("-", 2)[1]
         token = data.split("-", 3)[2]
