@@ -15,6 +15,27 @@ BATCH_FILES = {}
 
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client, message):
+    data = message.command[1]
+    if data.split("-", 1)[0] == "verify": # set if or elif it depend on your code
+        userid = data.split("-", 2)[1]
+        token = data.split("-", 3)[2]
+        if str(message.from_user.id) != str(userid):
+            return await message.reply_text(
+                text="<b>Invalid link or Expired link !</b>",
+                protect_content=True
+            )
+        is_valid = await check_token(client, userid, token)
+        if is_valid == True:
+            await message.reply_text(
+                text=f"<b>Hey {message.from_user.mention}, You are successfully verified !\nNow you have unlimited access for all files till today midnight.</b>",
+                protect_content=True
+            )
+            await verify_user(client, userid, token)
+        else:
+            return await message.reply_text(
+                text="<b>Invalid link or Expired link !</b>",
+                protect_content=True
+            )
     if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
         buttons = [[           
             InlineKeyboardButton("Cʜᴀɴɴᴇʟ 🔈", url="https://t.me/MoviesMagaa")
@@ -74,27 +95,6 @@ async def start(client, message):
         await message.reply_photo(photo=random.choice(PICS), caption=START_MESSAGE.format(user=message.from_user.mention, bot=client.mention), reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML)
         return await m.delete()
 
-    data = message.command[1]
-    if data.split("-", 1)[0] == "verify": # set if or elif it depend on your code
-        userid = data.split("-", 2)[1]
-        token = data.split("-", 3)[2]
-        if str(message.from_user.id) != str(userid):
-            return await message.reply_text(
-                text="<b>Invalid link or Expired link !</b>",
-                protect_content=True
-            )
-        is_valid = await check_token(client, userid, token)
-        if is_valid == True:
-            await message.reply_text(
-                text=f"<b>Hey {message.from_user.mention}, You are successfully verified !\nNow you have unlimited access for all files till today midnight.</b>",
-                protect_content=True
-            )
-            await verify_user(client, userid, token)
-        else:
-            return await message.reply_text(
-                text="<b>Invalid link or Expired link !</b>",
-                protect_content=True
-            )
         
     data = message.command[1]
     try:
