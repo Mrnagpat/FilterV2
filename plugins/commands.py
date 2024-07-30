@@ -15,27 +15,6 @@ BATCH_FILES = {}
 
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client, message):
-    data = message.command[1]
-    if data.split("-", 1)[0] == "verify": # set if or elif it depend on your code
-        userid = data.split("-", 2)[1]
-        token = data.split("-", 3)[2]
-        if str(message.from_user.id) != str(userid):
-            return await message.reply_text(
-                text="<b>Invalid link or Expired link !</b>",
-                protect_content=True
-            )
-        is_valid = await check_token(client, userid, token)
-        if is_valid == True:
-            await message.reply_text(
-                text=f"<b>Hey {message.from_user.mention}, You are successfully verified !\nNow you have unlimited access for all files till today midnight.</b>",
-                protect_content=True
-            )
-            await verify_user(client, userid, token)
-        else:
-            return await message.reply_text(
-                text="<b>Invalid link or Expired link !</b>",
-                protect_content=True
-            )
     if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
         buttons = [[           
             InlineKeyboardButton("Cʜᴀɴɴᴇʟ 🔈", url="https://t.me/MoviesMagaa")
@@ -185,7 +164,27 @@ async def start(client, message):
             await asyncio.sleep(1) 
         return await sts.delete()
 
-    
+    if data.split("-", 1)[0] == "verify": # set if or elif it depend on your code
+        userid = data.split("-", 2)[1]
+        token = data.split("-", 3)[2]
+        if str(message.from_user.id) != str(userid):
+            return await message.reply_text(
+                text="<b>Invalid link or Expired link !</b>",
+                protect_content=True
+            )
+        is_valid = await check_token(client, userid, token)
+        if is_valid == True:
+            await message.reply_text(
+                text=f"<b>Hey {message.from_user.mention}, You are successfully verified !\nNow you have unlimited access for all files till today midnight.</b>",
+                protect_content=True
+            )
+            await verify_user(client, userid, token)
+        else:
+            return await message.reply_text(
+                text="<b>Invalid link or Expired link !</b>",
+                protect_content=True
+            )
+
     files_ = await get_file_details(file_id)           
     if not files_:
         pre, file_id = ((base64.urlsafe_b64decode(data + "=" * (-len(data) % 4))).decode("ascii")).split("_", 1)
