@@ -1,6 +1,6 @@
-import os, math, logging, datetime, pytz
+import os, math, logging, datetime
 import logging.config
-
+import pytz
 from pyrogram.errors import BadRequest, Unauthorized
 from pyrogram import Client
 from pyrogram import types
