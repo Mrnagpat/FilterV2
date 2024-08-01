@@ -36,8 +36,6 @@ async def pm_next_page(bot, query):
     try: n_offset = int(n_offset)
     except: n_offset = 0
     if not files: return
-    m = await message.reply_sticker("CAACAgUAAxkBAAEBvlVk7YKnYxIHVnKW2PUwoibIR2ygGAACBAADwSQxMYnlHW4Ls8gQHgQ") 
-        await asyncio.sleep(2)
     
     if SHORT_URL and SHORT_API:          
         if SINGLE_BUTTON:
