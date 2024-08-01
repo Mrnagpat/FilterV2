@@ -31,13 +31,13 @@ async def pm_next_page(bot, query):
     except: offset = 0
     search = temp.PM_BUTTONS.get(str(key))
     if not search: return await query.answer("Yᴏᴜ Aʀᴇ Usɪɴɢ Oɴᴇ Oғ Mʏ Oʟᴅ Mᴇssᴀɢᴇs, Pʟᴇᴀsᴇ Sᴇɴᴅ Tʜᴇ Rᴇǫᴜᴇsᴛ Aɢᴀɪɴ", show_alert=True)
-        m = await message.reply_sticker("CAACAgUAAxkBAAEBvlVk7YKnYxIHVnKW2PUwoibIR2ygGAACBAADwSQxMYnlHW4Ls8gQHgQ") 
-        await asyncio.sleep(2)
 
     files, n_offset, total = await get_search_results(search.lower(), offset=offset, filter=True)
     try: n_offset = int(n_offset)
     except: n_offset = 0
     if not files: return
+    m = await message.reply_sticker("CAACAgUAAxkBAAEBvlVk7YKnYxIHVnKW2PUwoibIR2ygGAACBAADwSQxMYnlHW4Ls8gQHgQ") 
+        await asyncio.sleep(2)
     
     if SHORT_URL and SHORT_API:          
         if SINGLE_BUTTON:
