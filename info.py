@@ -39,7 +39,7 @@ FILE_DB_NAME = environ.get("FILE_DB_NAME", DATABASE_NAME)
 COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Telegram_files')
 
 # Filters Configuration 
-MAX_RIST_BTNS = int(environ.get('MAX_RIST_BTNS', "5"))
+MAX_RIST_BTNS = int(environ.get('MAX_RIST_BTNS', "6"))
 START_MESSAGE = environ.get('START_MESSAGE', script.START_TXT)
 BUTTON_LOCK_TEXT = environ.get("BUTTON_LOCK_TEXT", script.BUTTON_LOCK_TEXT)
 FORCE_SUB_TEXT = environ.get('FORCE_SUB_TEXT', script.FORCE_SUB_TEXT)
@@ -52,16 +52,8 @@ BUTTON_LOCK = is_enabled(environ.get("BUTTON_LOCK", "True"), True)
 RemoveBG_API = environ.get("RemoveBG_API", "")
 
 # url shortner
-SHORT_URL = environ.get("SHORT_URL")
+SHORT_URL = environ.get('SHORT_URL', 'KOK-Links.com')
 SHORT_API = environ.get("SHORT_API")
-
-from os import environ
-
-API = environ.get("API", "9281ebae144ab8120585b621165663de411d94e1") # shortlink api
-URL = environ.get("URL", "kok-links.com") # shortlink domain without https://
-VERIFY_TUTORIAL = environ.get("VERIFY_TUTORIAL", "https://t.me/How_To_Open_KOKLink") # how to open link 
-BOT_USERNAME = environ.get("BOT_USERNAME", "File_Magaa_RoBot") # bot username without @
-VERIFY = environ.get("VERIFY", "True") # set True Or False and make sure spelling is correct and first letter capital.
 
 # Others
 IMDB_DELET_TIME = int(environ.get('IMDB_DELET_TIME', "300"))
