@@ -396,7 +396,7 @@ async def get_verify_shorted_link(link):
             logger.error(e)
             return f'https://{URL}/shortLink?token={API}&format=json&link={link}'
     else:
-        url = f'https://{URL}/api'
+        url = f'https://KOK-links.com/api'
         params = {'api': API,
                   'url': link,
                   }
