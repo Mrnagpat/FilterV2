@@ -151,10 +151,6 @@ Tʜɪs Mᴏᴅᴜʟᴇ Oɴʟʏ Wᴏʀᴋs Fᴏʀ Mʏ Aᴅᴍɪɴs
 ◉ ᴜꜱᴇʀɴᴀᴍᴇ: @{}
 
 ◉ ʙʏ: @{}</b>"""
-
-    LOG_TEXT_L = """#NewUser
-ID - <code>{}</code>
-Nᴀᴍᴇ - {}"""
   
     GROUPMANAGER_TXT = """<b>Hᴇʟᴩ Fᴏʀ GʀᴏᴜᴩMᴀɴᴀɢᴇʀ</b>
 
