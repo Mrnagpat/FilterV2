@@ -55,6 +55,15 @@ RemoveBG_API = environ.get("RemoveBG_API", "")
 SHORT_URL = environ.get('SHORT_URL', 'kok-links.com')
 SHORT_API = environ.get("SHORT_API")
 
+# Verify
+VERIFY = bool(environ.get('VERIFY', True))
+VERIFY_EXPIRE = int(environ.get('VERIFY_EXPIRE', 10800)) # Add time in seconds
+VERIFY_TUTORIAL = environ.get('VERIFY_TUTORIAL', 'https://t.me/')
+SHORTLINK_URL = environ.get('SHORTLINK_URL', 'runurl.in')
+SHORTLINK_API = environ.get('SHORTLINK_API', '1277706b49fbfbe00746b85d5e12f5b3e4bae1fd')
+
+
+
 # Others
 IMDB_DELET_TIME = int(environ.get('IMDB_DELET_TIME', "100"))
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', 0))
