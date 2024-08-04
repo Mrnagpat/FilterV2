@@ -6,15 +6,18 @@ from pyrogram import Client, filters, enums
 from pyrogram.errors import ChatAdminRequired, FloodWait
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from database.ia_filterdb import Media, get_file_details, unpack_new_file_id
-from info import CHANNELS, ADMINS, AUTH_CHANNEL, LOG_CHANNEL, PICS, BATCH_FILE_CAPTION, CUSTOM_FILE_CAPTION, PROTECT_CONTENT, START_MESSAGE, FORCE_SUB_TEXT, SUPPORT_CHAT
-from utils import get_settings, get_size, is_subscribed, save_group_settings, temp
+from info import CHANNELS, ADMINS, AUTH_CHANNEL, LOG_CHANNEL, PICS, BATCH_FILE_CAPTION, CUSTOM_FILE_CAPTION, PROTECT_CONTENT, START_MESSAGE, FORCE_SUB_TEXT, SUPPORT_CHAT, VERIFY, VERIFY_EXPIRE, VERIFY_TUTORIAL
+from utils import get_settings, get_size, is_subscribed, save_group_settings, temp, get_verify_shorted_link, get_token, get_verify_status, get_readable_time, TOKEN, update_verify_status
 from database.connections_mdb import active_connection
+import time
+from __init__ import logger
 
 logger = logging.getLogger(__name__)
 BATCH_FILES = {}
 
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client, message):
+    user = message.from_user.id
     if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
         buttons = [[           
             InlineKeyboardButton("Cʜᴀɴɴᴇʟ 🔈", url="https://t.me/MoviesMagaa")
@@ -80,7 +83,47 @@ async def start(client, message):
     except:
         file_id = data
         pre = ""
-        
+
+    if data.split("-", 1)[0] == 'verify':
+        _, userid, token = data.split("-")
+        temp.SEND_VERIFY[user] = False
+        if int(user) != int(userid):
+            TK = await get_token(client, user, f"https://telegram.me/{temp.U_NAME}?start=")
+            return await message.reply_text(
+                text="<b>Tʜᴀᴛ's Nᴏᴛ Yᴏᴜʀ Vᴇʀɪғʏ Tᴏᴋᴇɴ 🥲...\n\n\nTᴀᴘ Oɴ <u>Vᴇʀɪғʏ</u> Tᴏ Gᴇɴᴇʀᴀᴛᴇ Yᴏᴜʀs</b>",
+                reply_markup=InlineKeyboardMarkup([
+                                [InlineKeyboardButton('Vᴇʀɪғʏ ✔️', url=TK)],
+                                [InlineKeyboardButton('Hᴏᴡ Tᴏ Vᴇʀɪғʏ ❓', url=VERIFY_TUTORIAL)]]),
+                parse_mode=enums.ParseMode.HTML)
+            
+        TOKENU = TOKEN.get(user)
+        if TOKENU == token:
+            gk = await message.reply_photo(
+                photo='https://telegra.ph/file/6d8b1d3403448d11ed88d.jpg',
+                caption=f'<b>Yᴏᴜ Aʀᴇ Sᴜᴄᴄᴇssғᴜʟʟʏ Vᴇʀɪғɪᴇᴅ... Nᴏᴡ Yᴏᴜ Hᴀᴠᴇ Uɴʟɪᴍɪᴛᴇᴅ Aᴄᴄᴇss Tᴏ Aʟʟ Mᴏᴠɪᴇs Aɴᴅ Wᴇʙ Sᴇʀɪᴇs Fᴏʀ {get_readable_time(VERIFY_EXPIRE)}. \n\n\n आप सफलतापूर्वक सत्यापित हो चुके हैं, अब आप {get_readable_time(VERIFY_EXPIRE)} तक असीमित फिल्में और वेब श्रृंखला प्राप्त कर सकते हैं</b>',
+                parse_mode=enums.ParseMode.HTML)
+            await update_verify_status(user, is_verified=True, verified_time=time.time())
+            TOKENU[user] = None
+            await asyncio.sleep(100)
+            await gk.delete()
+            return
+            
+        else:
+            TK = await get_token(client, user, f"https://telegram.me/{temp.U_NAME}?start=")
+            return await message.reply_text(
+                text="<b>Iɴᴠᴀʟɪᴅ Oʀ Exᴘɪʀᴇᴅ Tᴏᴋᴇɴ 🔗...</b>",
+                reply_markup=InlineKeyboardMarkup([
+                                [InlineKeyboardButton('Vᴇʀɪғʏ ✔️', url=TK)],
+                                [InlineKeyboardButton('Hᴏᴡ Tᴏ Vᴇʀɪғʏ ❓', url=VERIFY_TUTORIAL)]]),
+                parse_mode=enums.ParseMode.HTML)
+
+    temp.FILE[user] = message.command[1]
+    if VERIFY == True and user not in ADMINS:
+       verify_status = await get_verify_status(user)
+       if verify_status['is_verified'] == True:
+          if VERIFY_EXPIRE < (time.time() - verify_status['verified_time']):
+              await update_verify_status(user, is_verified=False)
+             
     if data.split("-", 1)[0] == "BATCH":
         sts = await message.reply("PLEASE WAIT......")
         file_id = data.split("-", 1)[1]
@@ -194,8 +237,6 @@ async def start(client, message):
     if f_caption is None:
         f_caption = f"{files.file_name}"
     await client.send_cached_media(chat_id=message.from_user.id, file_id=file_id, caption=f_caption, protect_content=True if pre == 'filep' else False,)
-                    
-
 
 @Client.on_message(filters.command('channel') & filters.user(ADMINS))
 async def channel_info(bot, message):
@@ -379,5 +420,4 @@ async def geg_template(client, message):
     settings = await get_settings(grp_id)
     template = settings['template']
     await sts.edit(f"Cᴜʀʀᴇɴᴛ Tᴇᴍᴘʟᴀᴛᴇ Fᴏʀ {title} Iꜱ\n\n{template}")
-
 
