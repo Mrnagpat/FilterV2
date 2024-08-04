@@ -131,7 +131,7 @@ async def check_verify_status(user):
    return GK
  except Exception as e:
     await query.answer("First Start Me In PM 🙂", show_alert=True)
-    logger.error("chk", exc_info=True)
+    print("error in chk", e)
     return False
  finally:
    if GK and VERIFY_EXPIRE < (time.time() - verify_status['verified_time']):
@@ -157,10 +157,8 @@ async def verify_karwao(client, query):
 
  except Exception as e:
      await query.answer("Start Me In PM 🙂", show_alert=True)
-     print(e)
-     logger.error(exc_info=True)
-    
-    
+     print("vk", e)
+     
 
 async def is_subscribed(bot, query):
     try:
