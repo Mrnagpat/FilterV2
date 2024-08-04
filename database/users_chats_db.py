@@ -2,6 +2,11 @@ import motor.motor_asyncio
 from info import DATABASE_NAME, DATABASE_URL, IMDB, IMDB_TEMPLATE, MELCOW_NEW_USERS, P_TTI_SHOW_OFF, SINGLE_BUTTON, SPELL_CHECK_REPLY, PROTECT_CONTENT, MAX_RIST_BTNS, IMDB_DELET_TIME                  
 
 class Database:
+
+    default_verify = {
+            'is_verified': False,
+            'verified_time': 0,
+    }
     
     def __init__(self, uri, database_name):
         self._client = motor.motor_asyncio.AsyncIOMotorClient(uri)
@@ -17,6 +22,7 @@ class Database:
             ban_status=dict(
                 is_banned=False,
                 ban_reason="",
+                verify_status=self.default_verify
             ),
         )
 
@@ -31,7 +37,15 @@ class Database:
                 reason="",
             ),
         )
-    
+    async def get_verify_status(self, user_id):
+        user = await self.col.find_one({'id':int(user_id)})
+        if user:
+            return user.get('verify_status', self.default_verify)
+        return self.default_verify
+        
+    async def update_verify_status(self, user_id, verify):
+        await self.col.update_one({'id': int(user_id)}, {'$set': {'verify_status': verify}})
+        
     async def add_user(self, id, name):
         user = self.new_user(id, name)
         await self.col.insert_one(user)
