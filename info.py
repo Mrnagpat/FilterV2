@@ -52,15 +52,15 @@ BUTTON_LOCK = is_enabled(environ.get("BUTTON_LOCK", "True"), True)
 RemoveBG_API = environ.get("RemoveBG_API", "")
 
 # url shortner
-SHORT_URL = environ.get('SHORT_URL', 'kok-links.com')
+SHORT_URL = environ.get('SHORT_URL', '')
 SHORT_API = environ.get("SHORT_API")
 
 # Verify
 VERIFY = bool(environ.get('VERIFY', True))
-VERIFY_EXPIRE = int(environ.get('VERIFY_EXPIRE', 10800)) # Add time in seconds
+VERIFY_EXPIRE = int(environ.get('VERIFY_EXPIRE', 1000)) # Add time in seconds
 VERIFY_TUTORIAL = environ.get('VERIFY_TUTORIAL', 'https://t.me/')
-SHORTLINK_URL = environ.get('SHORTLINK_URL', 'runurl.in')
-SHORTLINK_API = environ.get('SHORTLINK_API', '1277706b49fbfbe00746b85d5e12f5b3e4bae1fd')
+SHORTLINK_URL = environ.get('SHORTLINK_URL', 'kok-links.com')
+SHORTLINK_API = environ.get('SHORTLINK_API', '9281ebae144ab8120585b621165663de411d94e1')
 
 
 
