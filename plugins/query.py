@@ -8,7 +8,7 @@ from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerId
 
 # Helper Function
 from Script import script
-from utils import get_size, is_subscribed, get_poster, search_gagala, temp, get_settings, save_group_settings, get_shortlink, get_time, humanbytes 
+from utils import get_size, is_subscribed, get_poster, search_gagala, temp, get_settings, save_group_settings, get_shortlink, get_time, humanbytes, check_verify_status, verify_karwao, TOKEN
 from .ExtraMods.carbon import make_carbon
 
 # Database Function 
@@ -170,11 +170,16 @@ async def cb_handler(client: Client, query: CallbackQuery):
         if CUSTOM_FILE_CAPTION:
             try: f_caption = CUSTOM_FILE_CAPTION.format(mention=query.from_user.mention, file_name='' if title is None else title, file_size='' if size is None else size, file_caption='' if f_caption is None else f_caption)                                                                                                      
             except Exception as e: logger.exception(e)
-        try:                  
+        if GK:= bool(TOKEN.get(query.from_user.id)):
+            return await query.answer("Check PM And Verify First 🙂", show_alert=True)  
+        try:
+            if not await check_verify_status(query.from_user.id):
+               return await verify_karwao(client, query)
             if AUTH_CHANNEL and not await is_subscribed(client, query):
                 return await query.answer(url=f"https://t.me/{temp.U_NAME}?start={ident}_{file_id}")
             else:
-                await client.send_cached_media(chat_id=query.from_user.id, file_id=file_id, caption=f_caption, protect_content=True if ident == "pmfilep" else False)                       
+                return await client.send_cached_media(chat_id=query.from_user.id, file_id=file_id, caption=f_caption, protect_content=True if ident == "pmfilep" else False)     
+                
         except Exception as e:
             await query.answer(f"⚠️ Eʀʀᴏʀ {e}", show_alert=True)
         
@@ -193,8 +198,12 @@ async def cb_handler(client: Client, query: CallbackQuery):
         if CUSTOM_FILE_CAPTION:
             try: f_caption = CUSTOM_FILE_CAPTION.format(mention=query.from_user.mention, file_name='' if title is None else title, file_size='' if size is None else size, file_caption='' if f_caption is None else f_caption)                               
             except Exception as e: logger.exception(e)
+        if GK:= bool(TOKEN.get(query.from_user.id)):
+            return await query.answer("Check PM And Verify First 🙂", show_alert=True)  
         try:
-            if AUTH_CHANNEL and not await is_subscribed(client, query):
+            if not await check_verify_status(query.from_user.id):
+               return await verify_karwao(client, query)
+            if AUTH_CHANNEL and not await is_subscribed(client, query) and await check_verify_status(query.from_user.id):
                 return await query.answer(url=f"https://t.me/{temp.U_NAME}?start={ident}_{file_id}")
             elif settings['botpm']:
                 return await query.answer(url=f"https://t.me/{temp.U_NAME}?start={ident}_{file_id}")
@@ -599,7 +608,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 InlineKeyboardButton(f"ᴡᴇʟᴄᴏᴍᴇ ᴍᴇꜱꜱᴀɢᴇ : {'ᴏɴ' if settings['welcome'] else 'ᴏꜰꜰ'}", f'setgs#welcome#{settings["welcome"]}#{str(grp_id)}')
             ]]
             await query.message.edit_reply_markup(InlineKeyboardMarkup(buttons))
-
 
 
 
