@@ -1,6 +1,4 @@
-import os, math, logging, datetime, pytz
-import logging.config
-
+import os, math, datetime, pytz
 from pyrogram.errors import BadRequest, Unauthorized
 from pyrogram import Client
 from pyrogram import types
@@ -13,13 +11,7 @@ from typing import Union, Optional, AsyncGenerator
 
 from plugins import web_server 
 from aiohttp import web
-
-# Get logging configurations
-logging.config.fileConfig("logging.conf")
-logging.getLogger().setLevel(logging.INFO)
-logging.getLogger("cinemagoer").setLevel(logging.ERROR)
-logger = logging.getLogger(__name__)
-
+from __init__ import logger
 
 class Bot(Client):
 
@@ -79,7 +71,6 @@ class Bot(Client):
 
         
 Bot().run()
-
 
 
 
