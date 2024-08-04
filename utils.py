@@ -1,24 +1,26 @@
-import logging, os, re, asyncio, requests, aiohttp 
+import os, re, asyncio, requests, aiohttp 
 from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait, UserIsBlocked, PeerIdInvalid                             
-from pyrogram.types import Message, InlineKeyboardButton
+from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram import filters, enums
-from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM, SHORT_URL, SHORT_API
+from info import * 
 from imdb import Cinemagoer
 from typing import Union, List
 from datetime import datetime, timedelta
 from database.users_chats_db import db
 from bs4 import BeautifulSoup
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+import string, random
+import aiohttp
+from __init__ import logger
+import time
 
 BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)\]\((buttonurl|buttonalert):(?:/{0,2})(.+?)(:same)?\))")
 BANNED = {}
 SMART_OPEN = '“'
 SMART_CLOSE = '”'
 START_CHAR = ('\'', '"', SMART_OPEN)
+VERIFIED = {}
+TOKEN = {}
 
-# temp db for banned 
 class temp(object):
     BANNED_USERS = []
     BANNED_CHATS = []
@@ -32,6 +34,133 @@ class temp(object):
     PM_BUTTONS = {}
     PM_SPELL = {}
     GP_SPELL = {}
+    FILE = {}
+    VERI = {}
+    
+    
+async def get_verify_status(user_id):
+    verify = VERIFIED.get(int(user_id))
+    if not verify:
+        verify = await db.get_verify_status(int(user_id))
+        VERIFIED[user_id] = verify
+    return verify
+
+async def update_verify_status(user_id, is_verified=False, verified_time=0):
+    current = await get_verify_status(int(user_id))
+    current['is_verified'] = is_verified
+    current['verified_time'] = verified_time
+    VERIFIED[user_id] = current
+    await db.update_verify_status(user_id, current)
+
+async def get_token(bot, userid, link):
+    Token = ''.join(random.choices(string.ascii_letters + string.digits, k=7))
+    TOKEN[userid] = Token
+    link = f"{link}verify-{userid}-{Token}"
+    print(link)
+    shortened_verify_url = await get_verify_shorted_link(link)
+    return str(shortened_verify_url)
+
+async def get_verify_shorted_link(link):
+    API = SHORTLINK_API
+    URL = SHORTLINK_URL
+    https = link.split(":")[0]
+    if "http" == https:
+        https = "https"
+        link = link.replace("http", https)
+
+    if URL == "api.shareus.in":
+        url = f"https://{URL}/shortLink"
+        params = {"token": API,
+                  "format": "json",
+                  "link": link,
+                  }
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, params=params, raise_for_status=True, ssl=False) as response:
+                    data = await response.json(content_type="text/html")
+                    if data["status"] == "success":
+                        return data["shortlink"]
+                    else:
+                        logger.error(f"Error: {data['message']}")
+                        return f'https://{URL}/shortLink?token={API}&format=json&link={link}'
+
+        except Exception as e:
+            logger.error(e)
+            return f'https://{URL}/shortLink?token={API}&format=json&link={link}'
+    else:
+        url = f'https://{URL}/api'
+        params = {'api': API,
+                  'url': link,
+                  }
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, params=params, raise_for_status=True, ssl=False) as response:
+                    data = await response.json()
+                    if data["status"] == "success":
+                        return data['shortenedUrl']
+                    else:
+                        logger.error(f"Error: {data['message']}")
+                        return f'https://{URL}/api?api={API}&link={link}'
+
+        except Exception as e:
+            logger.error(e)
+            return f'{URL}/api?api={API}&link={link}'
+
+def get_readable_time(duration_seconds):
+    days = duration_seconds // (24 * 3600)
+    hours = (duration_seconds % (24 * 3600)) // 3600
+    minutes = (duration_seconds % 3600) // 60
+    seconds = duration_seconds % 60
+    
+    time_str = ""
+    if days > 0:
+        time_str += f"{days} Dᴀʏ{'s' if days > 1 else ''} "
+    if hours > 0:
+        time_str += f"{hours} Hᴏᴜʀ{'s' if hours > 1 else ''} "
+    if minutes > 0:
+        time_str += f"{minutes} Mɪɴᴜᴛᴇ{'s' if minutes > 1 else ''} "
+    if seconds > 0:
+        time_str += f"{seconds} Sᴇᴄᴏɴᴅ{'s' if seconds > 1 else ''}"
+    
+    return time_str
+
+async def check_verify_status(user):
+ try:
+   verify_status = await get_verify_status(user)
+   GK = verify_status['is_verified']
+   return GK
+ except Exception as e:
+    await query.answer("First Start Me In PM 🙂", show_alert=True)
+    logger.error("chk", exc_info=True)
+    return False
+ finally:
+   if GK and VERIFY_EXPIRE < (time.time() - verify_status['verified_time']):
+      await update_verify_status(user, is_verified=False)
+      return False 
+             
+
+async def verify_karwao(client, query):
+ try:
+    await query.answer("Verification Sent To PM ✅", show_alert=True)
+    LK = await get_token(client, query.from_user.id, f"https://telegram.me/{temp.U_NAME}?start=")
+    gk = await client.send_photo(
+         chat_id=query.from_user.id,
+         photo='https://telegra.ph/file/6d8b1d3403448d11ed88d.jpg',
+         caption=f"<b>Hɪ {query.from_user.mention} 👋, Yᴏᴜ Aʀᴇ Nᴏᴛ Vᴇʀɪғɪᴇᴅ Tᴏᴅᴀʏ 🙂, Cʟɪᴄᴋ Oɴ Vᴇʀɪғʏ Bᴜᴛᴛᴏɴ Tᴏ Vᴇʀɪғʏ Aɴᴅ Gᴇᴛ Uɴʟɪᴍɪᴛᴇᴅ Mᴏᴠɪᴇs Fᴏʀ {get_readable_time(VERIFY_EXPIRE)}. \n\nआप Vᴇʀɪғɪᴇᴅ नही हैं, Vᴇʀɪғʏ पे क्लिक करके Vᴇʀɪғʏ करें और {get_readable_time(VERIFY_EXPIRE)} अनलिमिटेड मूवीज का आनंद ले 😊 \n\n\n #Vᴇʀɪꜰɪᴄᴀᴛɪᴏɴ...⌛</b>",
+         reply_markup=InlineKeyboardMarkup([
+                     [InlineKeyboardButton('Vᴇʀɪғʏ ✅', url=LK)],
+                     [InlineKeyboardButton('Hᴏᴡ Tᴏ Vᴇʀɪғʏ ❓', url=VERIFY_TUTORIAL)]]),
+         parse_mode=enums.ParseMode.HTML)
+    await asyncio.sleep(200)
+    await gk.delete()
+    return
+
+ except Exception as e:
+     await query.answer("Start Me In PM 🙂", show_alert=True)
+     print(e)
+     logger.error(exc_info=True)
+    
+    
 
 async def is_subscribed(bot, query):
     try:
@@ -358,7 +487,6 @@ async def admin_check(message: Message) -> bool:
 
 async def admin_filter(filt, client, message):
     return await admin_check(message)
-
 
 
 
