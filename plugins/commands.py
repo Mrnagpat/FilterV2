@@ -86,7 +86,6 @@ async def start(client, message):
 
     if data.split("-", 1)[0] == 'verify':
         _, userid, token = data.split("-")
-        temp.SEND_VERIFY[user] = False
         if int(user) != int(userid):
             TK = await get_token(client, user, f"https://telegram.me/{temp.U_NAME}?start=")
             return await message.reply_text(
@@ -103,7 +102,7 @@ async def start(client, message):
                 caption=f'<b>Yᴏᴜ Aʀᴇ Sᴜᴄᴄᴇssғᴜʟʟʏ Vᴇʀɪғɪᴇᴅ... Nᴏᴡ Yᴏᴜ Hᴀᴠᴇ Uɴʟɪᴍɪᴛᴇᴅ Aᴄᴄᴇss Tᴏ Aʟʟ Mᴏᴠɪᴇs Aɴᴅ Wᴇʙ Sᴇʀɪᴇs Fᴏʀ {get_readable_time(VERIFY_EXPIRE)}. \n\n\n आप सफलतापूर्वक सत्यापित हो चुके हैं, अब आप {get_readable_time(VERIFY_EXPIRE)} तक असीमित फिल्में और वेब श्रृंखला प्राप्त कर सकते हैं</b>',
                 parse_mode=enums.ParseMode.HTML)
             await update_verify_status(user, is_verified=True, verified_time=time.time())
-            TOKENU[user] = None
+            TOKEN[user] = None
             await asyncio.sleep(100)
             await gk.delete()
             return
