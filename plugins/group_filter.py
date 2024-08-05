@@ -100,7 +100,7 @@ async def next_page(bot, query):
             btn = [[InlineKeyboardButton(text=f"{file.file_name}", callback_data=f'files#{nxreq}#{file.file_id}'),
                     InlineKeyboardButton(text=f"{get_size(file.file_size)}", callback_data=f'files#{nxreq}#{file.file_id}')] for file in files ]
 
-    btn.insert(0, [InlineKeyboardButton("🔗 How To Open Link ? 🔗", url="https://t.me/How_To_Open_KOKLink")])
+    btn.insert(0, [InlineKeyboardButton("🔗 ʜᴏᴡ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ 🔗", "howdl")])
     if 0 < offset <= 10:
         off_set = 0
     elif offset == 0:
@@ -158,8 +158,6 @@ async def advantage_spoll_choker(bot, query):
 
 @Client.on_message(filters.group & filters.text & filters.incoming & filters.chat(AUTH_GROUPS) if AUTH_GROUPS else filters.text & filters.incoming & filters.group)
 async def give_filter(client, message):
- try:
-    st = await message.reply_sticker('CAACAgIAAx0CcOCC0wACASlmrkITPjDaVkB_mZieLgs0l-S8lAACcQgAAoSUQUlvaAkaprvOcx4E') 
     if G_FILTER:
         if G_MODE.get(str(message.chat.id)) == "False":
             return 
@@ -171,19 +169,17 @@ async def give_filter(client, message):
                 if FILTER_MODE.get(str(message.chat.id)) == "False":
                     return
                 else:
-                    await auto_filter(client, message, st)   
+                    await auto_filter(client, message)   
     else:
         k = await manual_filters(client, message)
         if k == False:
             if FILTER_MODE.get(str(message.chat.id)) == "False":
                 return
             else:
-                await auto_filter(client, message, st)
+                await auto_filter(client, message)
 
- except Exception as e:
-   print("go", e)
-   
-async def auto_filter(client, msg, st, spoll=False):
+
+async def auto_filter(client, msg, spoll=False):
     if not spoll:
         message = msg
         settings = await get_settings(message.chat.id)
@@ -220,7 +216,7 @@ async def auto_filter(client, msg, st, spoll=False):
             btn = [[InlineKeyboardButton(text=f"{file.file_name}", callback_data=f'{pre}#{req}#{file.file_id}'),
                     InlineKeyboardButton(text=f"{get_size(file.file_size)}", callback_data=f'{pre}#{req}#{file.file_id}')] for file in files ] 
 
-    btn.insert(0, [InlineKeyboardButton("🔗 How To Open Link ? 🔗", url="https://t.me/How_To_Open_KOKLink")])
+    btn.insert(0, [InlineKeyboardButton("🔗 ʜᴏᴡ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ 🔗", "howdl")])
     if offset != "":
         key = f"{message.chat.id}-{message.id}"
         temp.GP_BUTTONS[key] = search
@@ -273,7 +269,6 @@ async def auto_filter(client, msg, st, spoll=False):
     else:
         cap = f"Hᴇʀᴇ Is Wʜᴀᴛ I Fᴏᴜɴᴅ Fᴏʀ Yᴏᴜʀ Qᴜᴇʀʏ {search}"
     if imdb and imdb.get('poster'):
-        await st.delete()
         try:
             hehe = await message.reply_photo(photo=imdb.get('poster'), caption=cap, reply_markup=InlineKeyboardMarkup(btn))
             await asyncio.sleep(IMDB_DELET_TIME)
@@ -293,7 +288,6 @@ async def auto_filter(client, msg, st, spoll=False):
             await cdb.delete()
             await message.delete()
     else:
-        await st.delete()
         crl = await message.reply_text(cap, reply_markup=InlineKeyboardMarkup(btn))
         await asyncio.sleep(IMDB_DELET_TIME)
         await crl.delete()   
@@ -462,6 +456,7 @@ async def global_filters(client, message, text=False):
                 break
     else:
         return False
+
 
 
 
