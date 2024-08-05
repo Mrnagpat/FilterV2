@@ -170,8 +170,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
         if CUSTOM_FILE_CAPTION:
             try: f_caption = CUSTOM_FILE_CAPTION.format(mention=query.from_user.mention, file_name='' if title is None else title, file_size='' if size is None else size, file_caption='' if f_caption is None else f_caption)                                                                                                      
             except Exception as e: logger.exception(e)
-        if GK:= bool(TOKEN.get(query.from_user.id)):
-            return await query.answer("Check PM And Verify First 🙂", show_alert=True)  
+        #if GK:= bool(TOKEN.get(query.from_user.id)):
+            #return await query.answer("Check PM And Verify First 🙂", show_alert=True)  
         try:
             if not await check_verify_status(query.from_user.id):
                return await verify_karwao(client, query)
@@ -198,8 +198,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
         if CUSTOM_FILE_CAPTION:
             try: f_caption = CUSTOM_FILE_CAPTION.format(mention=query.from_user.mention, file_name='' if title is None else title, file_size='' if size is None else size, file_caption='' if f_caption is None else f_caption)                               
             except Exception as e: logger.exception(e)
-        if GK:= bool(TOKEN.get(query.from_user.id)):
-            return await query.answer("Check PM And Verify First 🙂", show_alert=True)  
+        #if GK:= bool(TOKEN.get(query.from_user.id)):
+           # return await query.answer("Check PM And Verify First 🙂", show_alert=True)  
         try:
             if not await check_verify_status(query.from_user.id):
                return await verify_karwao(client, query)
