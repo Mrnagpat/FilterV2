@@ -216,6 +216,30 @@ Fʀᴇᴇ Dɪꜱᴋ: {}"""
    
     FORCE_SUB_TEXT = "Sᴏʀʀʏ Bʀᴏ Yᴏᴜʀ Nᴏᴛ Jᴏɪɴᴇᴅ Mʏ Cʜᴀɴɴᴇʟ Sᴏ Pʟᴇᴀsᴇ Cʟɪᴄᴋ Jᴏɪɴ Bᴜᴛᴛᴏɴ Tᴏ Jᴏɪɴ Mʏ Cʜᴀɴɴᴇʟ Aɴᴅ Tʀʏ Aɢᴀɪɴ"
    
+    CUDNT_FND = """I Cᴏᴜʟᴅ Nᴏᴛ Fɪɴᴅ Aɴʏᴛʜɪɴɢ Rᴇʟᴀᴛᴇᴅ Tᴏ Yᴏᴜʀ Sᴇᴀʀᴄʜ {} 🥲, Kɪɴᴅʟʏ Sᴇʟᴇᴄᴛ Aɴʏ Oᴘᴛɪᴏɴ Bᴇʟᴏᴡ Oʀ Sᴇᴀʀᴄʜ Sᴘᴇʟʟɪɴɢ Oɴ Gᴏᴏɢʟᴇ 🔍"""
+
+    I_CUDNT = """Sᴏʀʀʏ Nᴏ Fɪʟᴇs Wᴇʀᴇ Fᴏᴜɴᴅ Fᴏʀ Yᴏᴜʀ Rᴇǫᴜᴇꜱᴛ {} 🥲, Kɪɴᴅʟʏ ᴄʜᴇᴄᴋ Yᴏᴜʀ Sᴘᴇʟʟɪɴɢ Oɴ Gᴏᴏɢʟᴇ Aɴᴅ Tʀʏ Aɢᴀɪɴ Lᴀᴛᴇʀ 😊.
+
+
+❓Pʀᴏᴘᴇʀ Rᴇǫᴜᴇꜱᴛ Fᴏʀᴍᴀᴛꜱ ⬇️ :
+   Fᴏʀ Mᴏᴠɪᴇs 🎦:-
+      • Varisu
+      • Varisu 2023 
+      • Varisu Hin 
+
+
+  Fᴏʀ Sᴇʀɪᴇs 🌐 :-
+      • Aarya 
+      • Aarya S01
+      • Aarya S01E06
+      • Aarya Hin
+
+🚫 Dᴏ Noᴛ Uꜱᴇ Tʜɪs Wᴏʀᴅs 🚫 ➠ Dubbed, Movie, Web Series, Akshay Kumar Eᴛᴄ..."""
+
+    I_CUD_NT = """<b>I Cᴀɴ Nᴏᴛ Fɪɴᴅ Aɴʏᴛʜɪɴɢ Rᴇʟᴀᴛᴇᴅ Tᴏ Yᴏᴜʀ Sᴇᴀʀᴄʜ {} 🥲. \n\nKɪɴᴅʟʏ Sᴇᴀʀᴄʜ Sᴘᴇʟʟɪɴɢ Oɴ Gᴏᴏɢʟᴇ 🔍</b>"""
+
+    MVE_NT_FND = """<b>Sᴏʀʀʏ, Bᴜᴛ Mᴏᴠɪᴇ Nᴏᴛ Fᴏᴜɴᴅ Iɴ Mʏ Dᴀᴛᴀʙᴀꜱᴇ 🥺.\n\n Cʟɪᴄᴋ <u>Rᴇǫᴜᴇsᴛ</u> Bᴜᴛᴛᴏɴ Bᴇʟᴏᴡ ⬇️ Tᴏ Rᴇǫᴜᴇsᴛ Tʜᴀᴛ Mᴏᴠɪᴇ/Sᴇʀɪᴇs 😊...</b>"""
+    
     WELCOM_TEXT = """Hᴇʏ {user} 💞
 
 Wᴇʟᴄᴏᴍᴇ ᴛᴏ {chat}.
